@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纽扣专卖店 - 优质纽扣供应商</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        /* 头部样式 */
+        .header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0070ba;
+            text-decoration: none;
+        }
+        
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 主内容 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .hero {
+            background-color: #0070ba;
+            color: white;
+            padding: 60px 40px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #ffffff;
+            color: #0070ba;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+        }
+        
+        /* 商品展示 */
+        .products-section {
+            margin-bottom: 60px;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #f0f0f0;
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .product-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .product-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0070ba;
+            margin-bottom: 15px;
+        }
+        
+        .add-to-cart {
+            width: 100%;
+            padding: 10px;
+            background-color: #0070ba;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #005a9e;
+        }
+        
+        /* 购物车 */
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .cart-modal.active {
+            right: 0;
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-header h2 {
+            font-size: 20px;
+        }
+        
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .cart-items {
+            margin-bottom: 30px;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .cart-item-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #0070ba;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        
+        .quantity-btn {
+            width: 25px;
+            height: 25px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 0 10px;
+        }
+        
+        .remove-item {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .cart-total {
+            padding: 20px 0;
+            border-top: 2px solid #eee;
+            margin-bottom: 30px;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .total-label {
+            font-weight: bold;
+        }
+        
+        .total-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0070ba;
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #0070ba;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .checkout-btn:hover {
+            background-color: #005a9e;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        /* 页脚 */
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .cart-modal {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header class="header">
+        <nav class="nav">
+            <a href="#" class="logo">纽扣专卖店</a>
+            <div class="cart-icon" onclick="toggleCart()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 18C7 19.1046 6.10457 20 5 20C3.89543 20 3 19.1046 3 18C3 16.8954 3.89543 16 5 16C6.10457 16 7 16.8954 7 18Z" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M17 18C17 19.1046 16.1046 20 15 20C13.8954 20 13 19.1046 13 18C13 16.8954 13.8954 16 15 16C16.1046 16 17 16.8954 17 18Z" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 6H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16 6V4C16 3.46957 15.7893 2.96086 15.4142 2.58579C15.0391 2.21071 14.5304 2 14 2H10C9.46957 2 8.96086 2.21071 8.58579 2.58579C8.21071 2.96086 8 3.46957 8 4V6" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- 主内容 -->
+    <main class="container">
+        <!-- 英雄区 -->
+        <section class="hero">
+            <h1>优质纽扣供应商</h1>
+            <p>精选各类纽扣，为您的服装增添完美细节</p>
+            <a href="#products" class="btn">浏览商品</a>
+        </section>
+        
+        <!-- 商品展示 -->
+        <section class="products-section" id="products">
+            <h2 class="section-title">热门纽扣</h2>
+            <div class="products-grid">
+                <!-- 商品1 -->
+                <div class="product-card">
+                    <div class="product-image" style="display: flex; align-items: center; justify-content: center; background-color: #f0f0f0;">
+                        <svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="90" cy="90" r="40" fill="#ff6b6b"/>
+                            <circle cx="60" cy="60" r="25" fill="#4ecdc4"/>
+                            <circle cx="120" cy="60" r="25" fill="#45b7d1"/>
+                            <circle cx="60" cy="120" r="25" fill="#96ceb4"/>
+                            <circle cx="120" cy="120" r="25" fill="#ffeaa7"/>
+                            <circle cx="90" cy="90" r="15" fill="#dfe6e9"/>
+                        </svg>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">彩色树脂纽扣</h3>
+                        <p class="product-description">多种颜色可选，适合各类服装</p>
+                        <div class="product-price">¥2.50/颗</div>
+                        <button class="add-to-cart" onclick="addToCart('彩色树脂纽扣', 2.50, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iOTAiIGN5PSI5MCIgcj0iNDAiIGZpbGw9IiNmZjZiNmIiLz48Y2lyY2xlIGN4PSI2MCIgY3k9IjYwIiByPSIyNSIgZmlsbD0iIzRlY2RjNCIvPjxjaXJjbGUgY3g9IjEyMCIgY3k9IjYwIiByPSIyNSIgZmlsbD0iIzQ1YjdkMSIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMTIwIiByPSIyNSIgZmlsbD0iIzk2Y2ViNCIvPjxjaXJjbGUgY3g9IjEyMCIgY3k9IjEyMCIgcj0iMjUiIGZpbGw9IiNmZmVhYTciLz48Y2lyY2xlIGN4PSI5MCIgY3k9IjkwIiByPSIxNSIgZmlsbD0iI2RmZTZhOSIvPjwvc3ZnPg==')">加入购物车</button>
+                    </div>
+                </div>
+                
+                <!-- 商品2 -->
+                <div class="product-card">
+                    <div class="product-image" style="display: flex; align-items: center; justify-content: center; background-color: #f0f0f0;">
+                        <svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="90" cy="90" r="40" fill="#dfe6e9" stroke="#b2bec3" stroke-width="4"/>
+                            <circle cx="90" cy="90" r="30" fill="#636e72"/>
+                            <circle cx="90" cy="90" r="20" fill="#2d3436"/>
+                            <circle cx="90" cy="90" r="10" fill="#dfe6e9"/>
+                            <circle cx="60" cy="60" r="15" fill="#95a5a6"/>
+                            <circle cx="120" cy="60" r="15" fill="#95a5a6"/>
+                            <circle cx="60" cy="120" r="15" fill="#95a5a6"/>
+                            <circle cx="120" cy="120" r="15" fill="#95a5a6"/>
+                        </svg>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">金属纽扣</h3>
+                        <p class="product-description">高质量金属材质，耐用美观</p>
+                        <div class="product-price">¥5.00/颗</div>
+                        <button class="add-to-cart" onclick="addToCart('金属纽扣', 5.00, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iOTAiIGN5PSI5MCIgcj0iNDAiIGZpbGw9IiNkZmU2ZTkiIHN0cm9rZT0iI2IyYmVjMyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSI5MCIgcj0iMzAiIGZpbGw9IiM2MzZlNzIiLz48Y2lyY2xlIGN4PSI5MCIgY3k9IjkwIiByPSIyMCIgZmlsbD0iIzJkMzQzNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iOTAiIHI9IjEwIiBmaWxsPSIjZGZlNmU5Ii8+PGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iMTUiIGZpbGw9IiM5NWE1YTYiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI2MCIgcj0iMTUiIGZpbGw9IiM5NWE1YTYiLz48Y2lyY2xlIGN4PSI2MCIgY3k9IjEyMCIgcj0iMTUiIGZpbGw9IiM5NWE1YTYiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSIxMjAiIHI9IjE1IiBmaWxsPSIjOTVhNWE2Ii8+PC9zdmc+')">加入购物车</button>
+                    </div>
+                </div>
+                
+                <!-- 商品3 -->
+                <div class="product-card">
+                    <div class="product-image" style="display: flex; align-items: center; justify-content: center; background-color: #f0f0f0;">
+                        <svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="90" cy="90" r="40" fill="#d6a27b"/>
+                            <circle cx="90" cy="90" r="30" fill="#b88666"/>
+                            <circle cx="90" cy="90" r="20" fill="#9a6b46"/>
+                            <circle cx="90" cy="90" r="10" fill="#7c5026"/>
+                            <circle cx="60" cy="60" r="15" fill="#e0b796"/>
+                            <circle cx="120" cy="60" r="15" fill="#e0b796"/>
+                            <circle cx="60" cy="120" r="15" fill="#e0b796"/>
+                            <circle cx="120" cy="120" r="15" fill="#e0b796"/>
+                        </svg>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">木质纽扣</h3>
+                        <p class="product-description">天然木材制作，环保时尚</p>
+                        <div class="product-price">¥3.50/颗</div>
+                        <button class="add-to-cart" onclick="addToCart('木质纽扣', 3.50, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iOTAiIGN5PSI5MCIgcj0iNDAiIGZpbGw9IiNkNmEyN2IiLz48Y2lyY2xlIGN4PSI5MCIgY3k9IjkwIiByPSIzMCIgZmlsbD0iI2I4ODY2NiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iOTAiIHI9IjIwIiBmaWxsPSIjOWE2YjQ2Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSI5MCIgcj0iMTAiIGZpbGw9IiM3YzUwMjYiLz48Y2lyY2xlIGN4PSI2MCIgY3k9IjYwIiByPSIxNSIgZmlsbD0iI2UwYjc5NiIvPjxjaXJjbGUgY3g9IjEyMCIgY3k9IjYwIiByPSIxNSIgZmlsbD0iI2UwYjc5NiIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMTIwIiByPSIxNSIgZmlsbD0iI2UwYjc5NiIvPjxjaXJjbGUgY3g9IjEyMCIgY3k9IjEyMCIgcj0iMTUiIGZpbGw9IiNlMGI3OTYiLz48L3N2Zz4=')">加入购物车</button>
+                    </div>
+                </div>
+                
+                <!-- 商品4 -->
+                <div class="product-card">
+                    <div class="product-image" style="display: flex; align-items: center; justify-content: center; background-color: #f0f0f0;">
+                        <svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="90" cy="90" r="40" fill="#f8f9fa" stroke="#e9ecef" stroke-width="4"/>
+                            <circle cx="90" cy="90" r="30" fill="#dee2e6"/>
+                            <circle cx="90" cy="90" r="20" fill="#ced4da"/>
+                            <circle cx="90" cy="90" r="10" fill="#adb5bd"/>
+                            <circle cx="60" cy="60" r="15" fill="#f8f9fa"/>
+                            <circle cx="120" cy="60" r="15" fill="#f8f9fa"/>
+                            <circle cx="60" cy="120" r="15" fill="#f8f9fa"/>
+                            <circle cx="120" cy="120" r="15" fill="#f8f9fa"/>
+                        </svg>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">珍珠纽扣</h3>
+                        <p class="product-description">仿珍珠材质，优雅高贵</p>
+                        <div class="product-price">¥8.00/颗</div>
+                        <button class="add-to-cart" onclick="addToCart('珍珠纽扣', 8.00, 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iOTAiIGN5PSI5MCIgcj0iNDAiIGZpbGw9IiNmOGY5ZmEiIHN0cm9rZT0iI2U5ZWNlZiIgc3Ryb2tlLXdpZHRoPSI0Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSI5MCIgcj0iMzAiIGZpbGw9IiNkZWUyZTYiLz48Y2lyY2xlIGN4PSI5MCIgY3k9IjkwIiByPSIyMCIgZmlsbD0iI2NlZDRkYSIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iOTAiIHI9IjEwIiBmaWxsPSIjYWRiNWJkIi8+PGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iMTUiIGZpbGw9IiNmOGY5ZmEiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI2MCIgcj0iMTUiIGZpbGw9IiNmOGY5ZmEiLz48Y2lyY2xlIGN4PSI2MCIgY3k9IjEyMCIgcj0iMTUiIGZpbGw9IiNmOGY5ZmEiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSIxMjAiIHI9IjE1IiBmaWxsPSIjZjhmOWZhIi8+PC9zdmc+')">加入购物车</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 购物车模态框 -->
+    <div class="overlay" id="overlay" onclick="closeCart()"></div>
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-header">
+            <h2>购物车</h2>
+            <button class="close-cart" onclick="closeCart()">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- 购物车商品将通过JS动态添加 -->
+        </div>
+        <div class="cart-total" id="cartTotal">
+            <div class="total-row">
+                <span class="total-label">小计</span>
+                <span class="total-value" id="subtotal">¥0.00</span>
+            </div>
+            <div class="total-row">
+                <span class="total-label">总计</span>
+                <span class="total-value" id="total">¥0.00</span>
+            </div>
+        </div>
+        <button class="checkout-btn" onclick="checkout()">去结算</button>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 纽扣专卖店. 保留所有权利.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // 购物车数据
+        let cart = [];
+        
+        // 初始化
+        function init() {
+            updateCart();
+        }
+        
+        // 添加商品到购物车
+        function addToCart(name, price, image) {
+            // 检查商品是否已在购物车中
+            const existingItem = cart.find(item => item.name === name);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: Date.now(),
+                    name: name,
+                    price: price,
+                    quantity: 1,
+                    image: image
+                });
+            }
+            
+            updateCart();
+            showCart();
+        }
+        
+        // 更新购物车
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartCount = document.getElementById('cartCount');
+            const subtotalElement = document.getElementById('subtotal');
+            const totalElement = document.getElementById('total');
+            
+            // 更新购物车商品数量
+            cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+            
+            // 更新购物车内容
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p style="text-align: center; color: #666;">购物车为空</p>';
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item" data-id="${item.id}">
+                        <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-price">¥${item.price.toFixed(2)}</div>
+                            <div class="cart-item-quantity">
+                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                                <input type="number" class="quantity-input" value="${item.quantity}" min="1" onchange="updateQuantityInput(${item.id}, this.value)">
+                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                            </div>
+                        </div>
+                        <button class="remove-item" onclick="removeItem(${item.id})">&times;</button>
+                    </div>
+                `).join('');
+            }
+            
+            // 计算小计和总计
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            subtotalElement.textContent = `¥${subtotal.toFixed(2)}`;
+            totalElement.textContent = `¥${subtotal.toFixed(2)}`;
+        }
+        
+        // 更新商品数量
+        function updateQuantity(id, change) {
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity < 1) {
+                    removeItem(id);
+                } else {
+                    updateCart();
+                }
+            }
+        }
+        
+        // 更新数量输入框
+        function updateQuantityInput(id, value) {
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                const quantity = parseInt(value) || 1;
+                item.quantity = Math.max(1, quantity);
+                updateCart();
+            }
+        }
+        
+        // 移除商品
+        function removeItem(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCart();
+        }
+        
+        // 显示购物车
+        function showCart() {
+            document.getElementById('cartModal').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+        
+        // 关闭购物车
+        function closeCart() {
+            document.getElementById('cartModal').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+        
+        // 切换购物车
+        function toggleCart() {
+            const cartModal = document.getElementById('cartModal');
+            const overlay = document.getElementById('overlay');
+            
+            if (cartModal.classList.contains('active')) {
+                closeCart();
+            } else {
+                showCart();
+            }
+        }
+        
+        // 结算
+        function checkout() {
+            if (cart.length === 0) {
+                alert('购物车为空，请先添加商品');
+                return;
+            }
+            
+            // 模拟PayPal支付
+            alert('正在跳转到PayPal支付...');
+            
+            // 这里可以添加实际的PayPal支付集成代码
+            // 例如使用PayPal JavaScript SDK
+        }
+        
+        // 初始化
+        init();
+    </script>
+</body>
+</html>
