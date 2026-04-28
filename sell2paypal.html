@@ -334,6 +334,101 @@
             background-color: #005a9e;
         }
         
+        .paypal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: #0070ba;
+        }
+        
+        .paypal-btn:hover {
+            background-color: #005a9e;
+        }
+        
+        .btn-logo {
+            height: 20px;
+            width: auto;
+        }
+        
+        .payment-options {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        
+        .payment-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+        
+        .payment-method:hover {
+            border-color: #0070ba;
+        }
+        
+        .payment-method.selected {
+            border-color: #0070ba;
+            background-color: #f0f7ff;
+        }
+        
+        .payment-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            margin-right: 15px;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .payment-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background-color: #0070ba;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .payment-method.selected .payment-radio::after {
+            opacity: 1;
+        }
+        
+        .payment-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .payment-logo {
+            height: 25px;
+            width: auto;
+        }
+        
+        .payment-name {
+            font-weight: bold;
+            color: #333;
+        }
+        
         .overlay {
             position: fixed;
             top: 0;
@@ -515,7 +610,20 @@
                 <span class="total-value" id="total">¥0.00</span>
             </div>
         </div>
-        <button class="checkout-btn" onclick="checkout()">去结算</button>
+        <div class="payment-options">
+            <div class="payment-title">选择支付方式</div>
+            <div class="payment-method" onclick="selectPayment('paypal')">
+                <div class="payment-radio" id="paypal-radio"></div>
+                <div class="payment-info">
+                    <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal" class="payment-logo">
+                    <span class="payment-name">PayPal</span>
+                </div>
+            </div>
+        </div>
+        <button class="checkout-btn paypal-btn" onclick="checkoutWithPayPal()">
+            <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal" class="btn-logo">
+            使用 PayPal 支付
+        </button>
     </div>
     
     <!-- 页脚 -->
@@ -657,6 +765,41 @@
             
             // 这里可以添加实际的PayPal支付集成代码
             // 例如使用PayPal JavaScript SDK
+        }
+        
+        // 选择支付方式
+        function selectPayment(method) {
+            const paymentMethods = document.querySelectorAll('.payment-method');
+            paymentMethods.forEach(methodEl => methodEl.classList.remove('selected'));
+            
+            const selectedMethod = document.querySelector('.payment-method');
+            if (selectedMethod) {
+                selectedMethod.classList.add('selected');
+            }
+        }
+        
+        // 使用PayPal支付
+        function checkoutWithPayPal() {
+            if (cart.length === 0) {
+                alert('购物车为空，请先添加商品');
+                return;
+            }
+            
+            // 构建订单信息
+            const orderItems = cart.map(item => `${item.name} x ${item.quantity}`).join('\n');
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // 显示订单确认
+            const confirmMessage = `订单确认：\n\n商品详情：\n${orderItems}\n\n订单总额：¥${total.toFixed(2)}\n\n即将跳转到PayPal完成支付...`;
+            
+            if (confirm(confirmMessage)) {
+                // 模拟PayPal支付流程
+                alert('正在连接PayPal支付网关...\n\n支付成功！感谢您的购买！');
+                // 清空购物车
+                cart = [];
+                updateCart();
+                closeCart();
+            }
         }
         
         // 初始化
